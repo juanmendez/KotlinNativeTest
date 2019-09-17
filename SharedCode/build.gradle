@@ -1,23 +1,21 @@
 apply plugin: 'kotlin-multiplatform'
 
 kotlin {
-
     targets {
-        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
-                              ? presets.iosArm64 : presets.iosX64
-
-        fromPreset(iOSTarget, 'ios') {
-            compilations.main.outputKinds('FRAMEWORK')
+        final def iOSTarget = System.getenv("SDK_NAME")?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64
+        fromPreset(iOSTarget, "ios") {
+            binaries {
+                framework("SharedCode")
+            }
         }
-
-        fromPreset(presets.jvm, 'android')
+        fromPreset(presets.jvm, "android")
     }
-
     sourceSets {
         commonMain.dependencies {
             api 'org.jetbrains.kotlin:kotlin-stdlib-common'
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutines_version"
             implementation "io.ktor:ktor-client:$ktor_version"
+            implementation "io.ktor:ktor-client-core:$ktor_version"
         }
 
         androidMain.dependencies {
@@ -29,7 +27,6 @@ kotlin {
         iosMain.dependencies {
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutines_version"
             implementation "io.ktor:ktor-client-ios:$ktor_version"
-            implementation "io.ktor:ktor-client-core-ios:$ktor_version"
         }
     }
 }
@@ -41,17 +38,15 @@ configurations {
 
 task packForXCode(type: Sync) {
     final File frameworkDir = new File(buildDir, "xcode-frameworks")
-    final String mode = System.getenv('CONFIGURATION')?.toUpperCase() ?: 'DEBUG'
-
+    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: "DEBUG"
+    final def framework = kotlin.targets.ios.binaries.getFramework("SharedCode", mode)
     inputs.property "mode", mode
-    dependsOn kotlin.targets.ios.compilations.main.linkTaskName("FRAMEWORK", mode)
-
-    from { kotlin.targets.ios.compilations.main.getBinary("FRAMEWORK", mode).parentFile }
+    dependsOn framework.linkTask
+    from { framework.outputFile.parentFile }
     into frameworkDir
-
     doLast {
-        new File(frameworkDir, 'gradlew').with {
-            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
+        new File(frameworkDir, "gradlew").with {
+            text = "#!/bin/bash\nexport "JAVA_HOME=${System.getProperty("java.home")}"\ncd "${rootProject.rootDir}"\n./gradlew \$@\n"
             setExecutable(true)
         }
     }

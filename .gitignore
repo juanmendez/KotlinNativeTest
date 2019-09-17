@@ -36,4 +36,8 @@ SharedCode/build/kotlin
 SharedCode/build/classes
 SharedCode/build/bin
 SharedCode/build/tmp
+SharedCode/build/.transforms
 gradlew
+
+# Android project
+/app/build
