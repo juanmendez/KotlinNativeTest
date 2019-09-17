@@ -5,7 +5,7 @@ object StringStorage {
         mapOf(
             Pair(English.American(), "Hello, World!"),
             Pair(English.British(), "How ya doin' guv'nor?"),
-            Pair(Spanish(), "¡Hola, el mundo!")
+            Pair(Spanish(), "¡Hola mundo!")
         )
     )
 
@@ -19,14 +19,14 @@ object StringStorage {
     val openingHeaderTitle = LocalizedString(
         mapOf(
             Pair(English.All(), "Open at"),
-            Pair(Spanish(), "Abierto à")
+            Pair(Spanish(), "Abierto")
         )
     )
 
     val closingHeaderTitle = LocalizedString(
         mapOf(
             Pair(English.All(), "Closed at"),
-            Pair(Spanish(), "Cerrado à")
+            Pair(Spanish(), "Cerrado")
         )
     )
 
@@ -82,7 +82,7 @@ object StringStorage {
     val isOpenFormat = LocalizedString(
         mapOf(
             Pair(English.All(), "Is open {{1}} at {{2}}: "),
-            Pair(Spanish(), "Está abierto {{1}} a {{2}}: ")
+            Pair(Spanish(), "{{1}} abierto desde las {{2}}: ")
         )
     )
 
@@ -103,14 +103,14 @@ object StringStorage {
     val always = LocalizedString(
         mapOf(
             Pair(English.All(), "24 Hours"),
-            Pair(Spanish(), "Todos Horas")
+            Pair(Spanish(), "24 Horas")
         )
     )
 
     val hoursFormat = LocalizedString(
         mapOf(
             Pair(English.All(), "From {{1}} to {{2}}"),
-            Pair(Spanish(), "De {{1}} a {{2}}")
+            Pair(Spanish(), "día {{1}} a {{2}}")
         )
     )
 
